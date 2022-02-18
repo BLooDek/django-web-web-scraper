@@ -1,0 +1,129 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Untitled</title>
+    <link rel="stylesheet" href="../../static/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../static/assets/css/styles.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+{% csrf_token %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 d-flex flex-column justify-content-center" id="col1">
+            <form>
+                <p class="text-center">Find tag by ID</p>
+            </form>
+            <input type="url" id="url1">
+            <p class="text-center">URL</p><input type="text" id="id1">
+            <p class="text-center">ID</p>
+            <button class="btn btn-primary" id="btn1" type="button" onclick="search_by_id()">Button</button>
+        </div>
+        <div class="col-md-4 d-flex flex-column justify-content-center" id="col2">
+            <form>
+                <p class="text-center">Find tag by class</p>
+            </form>
+            <input type="url" id="url2">
+            <p class="text-center">URL</p><input type="text" id="id2">
+            <p class="text-center">Class</p><input type="text" id="el2">
+            <p class="text-center">Tag</p>
+            <button class="btn btn-primary text-center d-xl-flex" id="btn2" type="button" onclick="search_by_class()">
+                Button
+            </button>
+        </div>
+        <div class="col-md-4 d-flex flex-column justify-content-center" id="col3">
+            <form>
+                <p class="text-center">Find tag</p>
+            </form>
+            <input type="url" id="url3">
+            <p class="text-center">URL</p><input type="text" id="id3">
+            <p class="text-center">Tag</p>
+            <button class="btn btn-primary" id="btn3" type="button" onclick="search_by_el()">Button</button>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <p class="text-center" id="col4"></p>
+        </div>
+        <div class="col-md-4">
+            <p class="text-center" id="col5"></p>
+        </div>
+        <div class="col-md-4">
+            <p class="text-center" id="col6"></p>
+        </div>
+    </div>
+</div>
+<script src="../../static/assets/bootstrap/js/bootstrap.min.js"></script>
+<script>
+
+
+    function search_by_id() {
+        let url = document.getElementById('url1').value;
+        let id = document.getElementById('id1').value;
+        $.ajax({
+            type: "GET",
+            url: '/search_id',
+            data: {'web': url, 'id': id},
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                let item = document.getElementById('col4').innerHTML = data + '<br> <br>' + escapeHtml(data);
+            },
+            failure: function (data) {
+                console.log('failure');
+            }
+        });
+        const escapeHtml = (unsafe) => {
+            return unsafe.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;');
+        }
+    }
+
+    function search_by_class() {
+        let url = document.getElementById('url2').value;
+        let id = document.getElementById('el2').value;
+        let class_ = document.getElementById('id2').value;
+        const data_ = {'web': url, 'id': id};
+        $.ajax({
+            type: "GET",
+            url: '/search_class',
+            data: {'web': url, 'id': id, 'class': class_},
+            dataType: "json",
+            success: function (data) {
+                let item = document.getElementById('col5').innerHTML = JSON.stringify(data)
+            },
+            failure: function (data) {
+                console.log('failure');
+            }
+        });
+    }
+
+    function search_by_el() {
+        let url = document.getElementById('url3').value;
+        let id = document.getElementById('id3').value;
+        const data_ = {'web': url, 'id': id};
+        $.ajax({
+            type: "GET",
+            url: '/search_el',
+            data: {'web': url, 'id': id},
+            dataType: "json",
+            success: function (data) {
+                let item = document.getElementById('col6').innerHTML = JSON.stringify(data)
+            },
+            failure: function (data) {
+                console.log('failure');
+            }
+        });
+
+    }
+
+</script>
+</body>
+
+</html>
